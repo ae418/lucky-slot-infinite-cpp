@@ -8,16 +8,13 @@
 #include <ctime>
 using namespace std;
 
-// ====== 全自包含单文件，打开main.cpp直接编译就能玩，零外部依赖 ======
 enum Rarity { COMMON, UNCOMMON, RARE, EPIC, LEGENDARY };
 struct Item { string name; Rarity rarity; long long price; };
 
-// 全局状态
 long long coins = 500;
 long long jackpot = 10000;
 int pity_epic = 0;
 int pity_legendary = 0;
-int total_spin = 0;
 mt19937 rng(time(0));
 vector<Item> bag;
 set<string> collected;
@@ -79,7 +76,7 @@ void do_spin() {
     if(coins < cost) { cout << "金币不够！" << endl; Sleep(1000); return; }
     coins -= cost;
     jackpot += cost * 0.3;
-    pity_epic++; pity_legendary++; total_spin++;
+    pity_epic++; pity_legendary++;
     
     Rarity r = roll_rarity(cost);
     if(r == EPIC) pity_epic = 0;
@@ -98,12 +95,12 @@ void do_spin() {
 
 void show_bag() {
     cout << "\n===== 背包（共" << bag.size() << "个道具）=====" << endl;
-    for(int i=0;i<bag.size();i++) {
+    for(size_t i=0;i<bag.size();i++) {
         cout << i+1 << ". " << bag[i].name << " [" << rarity_name(bag[i].rarity) << "] 价值" << bag[i].price << endl;
     }
     cout << "输入序号卖出道具，输入0返回 > ";
     int s; cin >> s;
-    if(s>0 && s<=bag.size()) {
+    if(s>0 && (size_t)s <= bag.size()) {
         coins += bag[s-1].price;
         cout << "卖出成功，获得" << bag[s-1].price << "金币" << endl;
         bag.erase(bag.begin()+s-1);
