@@ -61,7 +61,7 @@ Item roll_item(Rarity r) {
         {"龙狙","深红之网","死神镰刀","凤凰权杖","冰霜剑"},
         {"龙纹传说","永恒之枪","世界之巅","神之庇护","屠龙神话"}
     };
-    int idx = uniform_int_distribution<int>(0, names[r].size()-1)(rng);
+    int idx = uniform_int_distribution<int>(0, (int)names[r].size()-1)(rng);
     Item it;
     it.name = names[r][idx];
     it.rarity = r;
@@ -75,7 +75,7 @@ void do_spin() {
     int cost = c==1?10:(c==2?50:200);
     if(coins < cost) { cout << "金币不够！" << endl; Sleep(1000); return; }
     coins -= cost;
-    jackpot += cost * 0.3;
+    jackpot += (long long)(cost * 0.3);
     pity_epic++; pity_legendary++;
     
     Rarity r = roll_rarity(cost);
@@ -87,7 +87,7 @@ void do_spin() {
     collected.insert(it.name);
     
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), rarity_color(r));
-    cout << "\n🎉 你抽中了：" << it.name << " [" << rarity_name(r) << "] 价值" << it.price << "金币" << endl;
+    cout << "\n你抽中了：" << it.name << " [" << rarity_name(r) << "] 价值" << it.price << "金币" << endl;
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
     cout << "当前金币：" << coins << "  |  公共奖池：" << jackpot << endl;
     Sleep(1500);
@@ -120,11 +120,14 @@ int main() {
     
     while(true) {
         system("cls");
-        cout << "╔════════════════════════╗" << endl;
-        cout << "║  幸运开箱·无尽版  v1.0  ║" << endl;
-        cout << "╚════════════════════════╝" << endl;
-        cout << "💰 金币：" << coins << "  |  🎰 奖池：" << jackpot << endl;
-        cout << "1. 开箱抽奖\n2. 背包卖道具\n3. 存档退出\n> ";
+        cout << "============================" << endl;
+        cout << "   幸运开箱·无尽版  v1.0    " << endl;
+        cout << "============================" << endl;
+        cout << "金币：" << coins << "  |  奖池：" << jackpot << endl;
+        cout << "1. 开箱抽奖" << endl;
+        cout << "2. 背包卖道具" << endl;
+        cout << "3. 存档退出" << endl;
+        cout << "> ";
         int op; cin >> op;
         if(op == 1) do_spin();
         else if(op == 2) show_bag();
